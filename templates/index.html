@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat with GPT-3</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div id="chat-container"></div>
+        <form id="chat-form">
+            <div class="form-group">
+                <textarea class="form-control" id="inputText" name="inputText" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+
+    <style>
+        .chat-message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 16px;
+            max-width: 70%;
+        }
+
+        .chat-message-user {
+            background-color: #dff2dc;
+            align-self: flex-start;
+        }
+
+        .chat-message-bot {
+            background-color: #d9edf7;
+            align-self: flex-end;
+        }
+
+        .chat-message-text {
+            word-wrap: break-word;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#chat-form').submit(function(event) {
+                event.preventDefault();
+                var inputText = $('#inputText').val();
+                $.ajax({
+                    url: '/',
+                    type: 'POST',
+                    data: { inputText: inputText },
+                    success: function(response) {
+                        $('#chat-container').append('<div class="chat-message chat-message-user"><div class="chat-message-text">' + inputText + '</div></div><div class="chat-message chat-message-bot"><div class="chat-message-text">' + response.response + '</div></div>');
+                        $('#inputText').val('');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#inputText').keydown(function(event) {
+                if (event.keyCode === 13 && !event.shiftKey) {
+                    event.preventDefault();
+                    $('#chat-form').submit();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
