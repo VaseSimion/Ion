@@ -4,18 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Chat with GPT-3</title>
+    <title>Chat with Dorel</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 </head>
 <body>
+
     <div class="container mt-5">
         <div id="chat-container"></div>
         <form id="chat-form">
             <div class="form-group">
                 <textarea class="form-control" id="inputText" name="inputText" rows="3"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Send</button>
+            <button type="submit" class="btn btn-primary" style="margin-bottom: 60px;">Send</button>
         </form>
+    </div>
+
+    <div id="loading-spinner" style="display: none; position: fixed; bottom: 50%; left: 50%; transform: translate(-50%, 50%);">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    </div>
+
+    <div style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #ddd; text-align: center; padding: 5px;">
+    &copy; Vase Simion 2023
     </div>
 
     <style>
@@ -48,6 +59,7 @@
             $('#chat-form').submit(function(event) {
                 event.preventDefault();
                 var inputText = $('#inputText').val();
+                $('#loading-spinner').show(); // show the loading spinner
                 $.ajax({
                     url: '/',
                     type: 'POST',
@@ -55,7 +67,8 @@
                     success: function(response) {
                         $('#chat-container').append('<div class="chat-message chat-message-user"><div class="chat-message-text">' + inputText + '</div></div><div class="chat-message chat-message-bot"><div class="chat-message-text">' + response.response + '</div></div>');
                         $('#inputText').val('');
-                    }
+                        $('#loading-spinner').hide(); // hide the loading spinner
+                    },
                 });
             });
         });
